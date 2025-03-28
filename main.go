@@ -1,22 +1,22 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	pricePackage "project_calculator/prices"
+)
 
 func main() {
 	prices := []float64{10.2, 104.3, 15.7}
 	taxes := []float64{1.2, 2.3, 3.4}
-
-	taxedPrices := map[float64][]float64{}
+	jobs := []*pricePackage.TaxIncludedPriceJob{}
 
 	for _, taxValue := range taxes {
-		slice := []float64{}
+		job := pricePackage.NewTaxIncludedPriceJob(taxValue, prices)
+		job.Process()
 
-		for _, price := range prices {
-			slice = append(slice, price*taxValue)
-		}
-
-		taxedPrices[taxValue] = slice
+		jobs = append(jobs, job)
 	}
 
-	fmt.Println(taxedPrices)
+	fmt.Println(jobs)
 }
