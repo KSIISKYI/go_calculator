@@ -3,11 +3,24 @@ package main
 import (
 	"fmt"
 
+	"project_calculator/filemanager"
 	pricePackage "project_calculator/prices"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	prices := []float64{10.2, 104.3, 15.7}
+	// Load .env file
+	if err := godotenv.Load(); err != nil {
+		panic("Error loading .env file")
+	}
+
+	prices, err := filemanager.GetPrices()
+
+	if err != nil {
+		panic("Error getting prices: " + err.Error())
+	}
+
 	taxes := []float64{1.2, 2.3, 3.4}
 	jobs := []*pricePackage.TaxIncludedPriceJob{}
 
