@@ -26,7 +26,11 @@ func main() {
 
 	for _, taxValue := range taxes {
 		job := pricePackage.NewTaxIncludedPriceJob(taxValue, prices)
-		job.Process()
+		err := job.Process()
+
+		if err != nil {
+			panic("Error processing job: " + err.Error())
+		}
 
 		jobs = append(jobs, job)
 	}

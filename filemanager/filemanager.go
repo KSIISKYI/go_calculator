@@ -10,7 +10,8 @@ import (
 )
 
 const (
-	pricesFile = "prices.json"
+	pricesFile     = "prices.json"
+	taxedPricesDir = "taxed_prices"
 )
 
 func GetPrices() ([]float64, error) {
@@ -51,6 +52,25 @@ func decodePricesRaw(raw []byte) (prices []float64, err error) {
 	}
 
 	return prices, nil
+}
+
+func WriteTaxedPrices(fileName string, prices map[string]float64) error {
+	pathForStoring := filepath.Join(helpers.GetStoragePath(), taxedPricesDir)
+
+	if _, err := os.Stat(pathForStoring); os.IsNotExist(err) {
+		os.Mkdir(pathForStoring, 0755)
+	}
+
+	filePath := filepath.Join(pathForStoring, fileName)
+	file, err := os.Create(filePath)
+
+	if err != nil {
+		return err
+	}
+
+	defer file.Close()
+
+	return json.NewEncoder(file).Encode(prices)
 }
 
 func getPricesFile() (*os.File, error) {
